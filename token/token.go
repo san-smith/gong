@@ -94,23 +94,25 @@ const (
 
 	keyword_beg
 	// Keywords
-	BREAK
+	PACKAGE
+	IMPORT
+
+	INTERFACE
+	STRUCT
+
+	TYPE
+	VAR
 	CONST
-	CONTINUE
-	DEFAULT
+
+	IF
 	ELSE
 
 	FOR
-	FUN
-	IF
-	IMPORT
-	INTERFACE
+	BREAK
+	CONTINUE
 
-	PACKAGE
+	FUN
 	RETURN
-	STRUCT
-	TYPE
-	VAR
 	keyword_end
 )
 
@@ -182,23 +184,25 @@ var tokens = [...]string{
 	SEMICOLON: ";",
 	COLON:     ":",
 
-	BREAK:    "break",
-	CONST:    "const",
-	CONTINUE: "continue",
-	DEFAULT:  "default",
-	ELSE:     "else",
-
-	FOR:       "for",
-	FUN:       "fun",
-	IF:        "if",
-	IMPORT:    "import",
-	INTERFACE: "interface",
-
 	PACKAGE: "package",
-	RETURN:  "return",
-	STRUCT:  "struct",
-	TYPE:    "type",
-	VAR:     "var",
+	IMPORT:  "import",
+
+	INTERFACE: "interface",
+	STRUCT:    "struct",
+
+	TYPE:  "type",
+	VAR:   "var",
+	CONST: "const",
+
+	IF:   "if",
+	ELSE: "else",
+
+	FOR:      "for",
+	BREAK:    "break",
+	CONTINUE: "continue",
+
+	FUN:    "fun",
+	RETURN: "return",
 }
 
 // String returns the string corresponding to the token tok.
@@ -257,6 +261,9 @@ func init() {
 	for i := keyword_beg + 1; i < keyword_end; i++ {
 		keywords[tokens[i]] = i
 	}
+	keywords[tokens[LAND]] = LAND
+	keywords[tokens[LOR]] = LOR
+	keywords[tokens[NOT]] = NOT
 }
 
 // Lookup maps an identifier to its keyword token or IDENT (if not a keyword).
