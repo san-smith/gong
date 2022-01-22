@@ -32,6 +32,9 @@ var valids = []string{
 	`package p; type T (*int)`,
 	`package p; var _ = fun()T(nil)`,
 	`package p; fun _(T (P))`,
+	`package p; var _: T`,
+	`package p; var x, y: int`,
+	`package p; var x, y: int = 1, 2`,
 }
 
 // validWithTParamsOnly holds source code examples that are valid if
@@ -98,7 +101,7 @@ var invalids = []string{
 	`package p; var a = fun /* ERROR "expected expression" */ ();`,
 	`package p; fun f() { if x := g(); x /* ERROR "expected boolean expression" */ = 0 {}};`,
 	`package p; fun f() { _ = x = /* ERROR "expected '=='" */ 0 {}};`,
-	`package p; fun f() { _ = 1 == fun()int { var x bool; x = x = /* ERROR "expected '=='" */ true; return x }() };`,
+	`package p; fun f() { _ = 1 == fun()int { var x: bool; x = x = /* ERROR "expected '=='" */ true; return x }() };`,
 	`package p; fun _() (type /* ERROR "found 'type'" */ T)(T)`,
 	`package p; fun (type /* ERROR "found 'type'" */ T)(T) _()`,
 
@@ -106,8 +109,8 @@ var invalids = []string{
 
 	`package p; var x /* ERROR "missing variable type or initialization" */ , y, z;`,
 	`package p; const x /* ERROR "missing constant value" */ ;`,
-	`package p; const x /* ERROR "missing constant value" */ int;`,
-	`package p; const (x = 0; y; z /* ERROR "missing constant value" */ int);`,
+	`package p; const x: /* ERROR "missing constant value" */ int;`,
+	`package p; const (x = 0; y; z: /* ERROR "missing constant value" */ int);`,
 
 	// issue 13475
 	`package p; fun f() { if true {} else ; /* ERROR "expected if statement or block" */ }`,
@@ -117,7 +120,7 @@ var invalids = []string{
 // error messages produced when ParseTypeParams is not set.
 var invalidNoTParamErrs = []string{
 	// `package p; type T[P any /* ERROR "expected ']', found any" */ ] = T0`,
-	`package p; var _ fun[ /* ERROR "expected '\(', found '\['" */ T any](T)`,
+	`package p; var _: fun[ /* ERROR "expected '\(', found '\['" */ T any](T)`,
 	`package p; fun _[ /* ERROR "expected '\(', found '\['" */ ]()`,
 }
 
@@ -125,7 +128,7 @@ var invalidNoTParamErrs = []string{
 // error messages produced when ParseTypeParams is set.
 var invalidTParamErrs = []string{
 	`package p; type T[P any] = /* ERROR "cannot be alias" */ T0`,
-	`package p; var _ fun[ /* ERROR "cannot have type parameters" */ T any](T)`,
+	`package p; var _: fun[ /* ERROR "cannot have type parameters" */ T any](T)`,
 	`package p; fun _[]/* ERROR "empty type parameter list" */()`,
 }
 
