@@ -1,0 +1,121 @@
+// Copyright 2009 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+package scanner
+
+import { Position } from "gong/token"
+
+enum Weekdays {
+    Monday = 0,
+    Tuesday,
+}
+
+import (
+	"fmt"
+	"gong/token"
+	"io"
+	"sort"
+)
+
+// In an ErrorList, an error is represented by an *Error.
+// The position Pos, if valid, points to the beginning of
+// the offending token, and the error condition is described
+// by Msg.
+//
+struct Error {
+	Pos: Position
+	Msg: string
+}
+
+// Error implements the error interface.
+fun Error.Error(): string {
+	if Pos.Filename != "" || Pos.IsValid() {
+		// don't print "<unknown position>"
+		// TODO(gri) reconsider the semantics of Position.IsValid
+		return Pos.String() + ": " + Msg
+	}
+	return Msg
+}
+
+// ErrorList is a list of *Errors.
+// The zero value for an ErrorList is an empty ErrorList ready to use.
+//
+type ErrorList []*Error
+
+// Add adds an Error with given position and error message to an ErrorList.
+fun *ErrorList.Add(pos: Position, msg: string) => *this = append(*this, &Error{pos, msg})
+
+// Reset resets an ErrorList to no errors.
+fun *ErrorList.Reset() => *this = (*this)[0:0]
+
+// ErrorList implements the sort Interface.
+fun ErrorList.Len(): int => len(this)
+fun ErrorList.Swap(i, j: int) => this[i], this[j] = this[j], this[i]
+
+fun ErrorList.Less(i, j: int): bool {
+	e := &this[i].Pos
+	f := &this[j].Pos
+	// Note that it is not sufficient to simply compare file offsets because
+	// the offsets do not reflect modified line information (through //line
+	// comments).
+	if e.Filename != f.Filename {
+		return e.Filename < f.Filename
+	}
+	if e.Line != f.Line {
+		return e.Line < f.Line
+	}
+	if e.Column != f.Column {
+		return e.Column < f.Column
+	}
+	return this[i].Msg < this[j].Msg
+}
+
+// Sort sorts an ErrorList. *Error entries are sorted by position,
+// other errors are sorted by error message, and before any *Error
+// entry.
+//
+fun ErrorList.Sort() => sort.Sort(this)
+
+// RemoveMultiples sorts an ErrorList and removes all but the first error per line.
+fun *ErrorList.RemoveMultiples() {
+	sort.Sort(this)
+	var last: Position // initial last.Line is != any legal error line
+	i := 0
+	for _, e := range *p {
+		if e.Pos.Filename != last.Filename || e.Pos.Line != last.Line {
+			last = e.Pos
+			(*this)[i] = e
+			i++
+		}
+	}
+	*this = (*this)[0:i]
+}
+
+// An ErrorList implements the error interface.
+fun ErrorList.Error(): string => match len(this) {
+    0 => "no errors"
+    1 => this[0].Error()
+    _ => Sprintf("%s (and %d more errors)", this[0], len(this)-1)
+}
+
+// Err returns an error equivalent to this error list.
+// If the list is empty, Err returns nil.
+fun ErrorList.Err(): error {
+	if len(this) == 0: return nil
+	return p
+}
+
+// PrintError is a utility function that prints a list of errors to w,
+// one error per line, if the err parameter is an ErrorList. Otherwise
+// it prints the err string.
+//
+fun PrintError(w: Writer, err: error) {
+	if list, ok := err.(ErrorList); ok {
+		for _, e := range list {
+			Fprintf(w, "%s\n", e)
+		}
+	} else if err != nil {
+		Fprintf(w, "%s\n", err)
+	}
+}

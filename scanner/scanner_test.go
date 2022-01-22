@@ -421,19 +421,12 @@ var lines = []string{
 	"package\n",
 	"import\n",
 
-	"interface\n",
-	"struct\n",
-
 	"type\n",
 	"var\n",
 	"const\n",
 
 	"if\n",
 	"else\n",
-
-	"for\n",
-	"break$\n",
-	"continue$\n",
 
 	"fun\n",
 	"return$\n",
@@ -847,22 +840,22 @@ func TestIssue28112(t *testing.T) {
 	}
 }
 
-func BenchmarkScan(b *testing.B) {
-	b.StopTimer()
-	fset := token.NewFileSet()
-	file := fset.AddFile("", fset.Base(), len(source))
-	var s Scanner
-	b.StartTimer()
-	for i := 0; i < b.N; i++ {
-		s.Init(file, source, nil, ScanComments)
-		for {
-			_, tok, _ := s.Scan()
-			if tok == token.EOF {
-				break
-			}
-		}
-	}
-}
+// func BenchmarkScan(b *testing.B) {
+// 	b.StopTimer()
+// 	fset := token.NewFileSet()
+// 	file := fset.AddFile("", fset.Base(), len(source))
+// 	var s Scanner
+// 	b.StartTimer()
+// 	for i := 0; i < b.N; i++ {
+// 		s.Init(file, source, nil, ScanComments)
+// 		for {
+// 			_, tok, _ := s.Scan()
+// 			if tok == token.EOF {
+// 				break
+// 			}
+// 		}
+// 	}
+// }
 
 func TestNumbers(t *testing.T) {
 	for _, test := range []struct {
