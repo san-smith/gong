@@ -62,16 +62,13 @@ const (
 	SHR_ASSIGN     // >>=
 	AND_NOT_ASSIGN // &^=
 
-	LAND // and
-	LOR  // or
-	INC  // ++
-	DEC  // --
+	INC // ++
+	DEC // --
 
 	EQL    // ==
 	LSS    // <
 	GTR    // >
 	ASSIGN // =
-	NOT    // not
 
 	NEQ      // !=
 	LEQ      // <=
@@ -90,9 +87,15 @@ const (
 	RBRACE    // }
 	SEMICOLON // ;
 	COLON     // :
-	operator_end
 
 	keyword_beg
+	// keywords operators
+
+	NOT  // not
+	LAND // and
+	LOR  // or
+
+	operator_end
 	// Keywords
 	PACKAGE
 	IMPORT
@@ -261,9 +264,6 @@ func init() {
 	for i := keyword_beg + 1; i < keyword_end; i++ {
 		keywords[tokens[i]] = i
 	}
-	keywords[tokens[LAND]] = LAND
-	keywords[tokens[LOR]] = LOR
-	keywords[tokens[NOT]] = NOT
 }
 
 // Lookup maps an identifier to its keyword token or IDENT (if not a keyword).
