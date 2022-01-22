@@ -1,0 +1,9 @@
+package p
+
+fun sum(a, b int) {
+    return a + b
+}
+
+fun sum2(a int, b int) {
+    return a + b
+}
