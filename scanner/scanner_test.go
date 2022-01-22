@@ -153,19 +153,12 @@ var tokens = [...]elt{
 	{token.PACKAGE, "package", keyword},
 	{token.IMPORT, "import", keyword},
 
-	{token.INTERFACE, "interface", keyword},
-	{token.STRUCT, "struct", keyword},
-
 	{token.TYPE, "type", keyword},
 	{token.VAR, "var", keyword},
 	{token.CONST, "const", keyword},
 
 	{token.IF, "if", keyword},
 	{token.ELSE, "else", keyword},
-
-	{token.FOR, "for", keyword},
-	{token.BREAK, "break", keyword},
-	{token.CONTINUE, "continue", keyword},
 
 	{token.FUN, "fun", keyword},
 	{token.RETURN, "return", keyword},

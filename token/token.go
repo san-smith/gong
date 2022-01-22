@@ -100,19 +100,12 @@ const (
 	PACKAGE
 	IMPORT
 
-	INTERFACE
-	STRUCT
-
 	TYPE
 	VAR
 	CONST
 
 	IF
 	ELSE
-
-	FOR
-	BREAK
-	CONTINUE
 
 	FUN
 	RETURN
@@ -190,19 +183,12 @@ var tokens = [...]string{
 	PACKAGE: "package",
 	IMPORT:  "import",
 
-	INTERFACE: "interface",
-	STRUCT:    "struct",
-
 	TYPE:  "type",
 	VAR:   "var",
 	CONST: "const",
 
 	IF:   "if",
 	ELSE: "else",
-
-	FOR:      "for",
-	BREAK:    "break",
-	CONTINUE: "continue",
 
 	FUN:    "fun",
 	RETURN: "return",
