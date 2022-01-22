@@ -1774,7 +1774,19 @@ func (p *parser) parseValueSpec(doc *ast.CommentGroup, _ token.Pos, keyword toke
 
 	pos := p.pos
 	idents := p.parseIdentList()
+
+	hasColon := false
+	if p.tok == token.COLON {
+		pos = p.pos
+		p.next()
+		hasColon = true
+	}
 	typ := p.tryIdentOrType()
+
+	if typ != nil && !hasColon {
+		p.error(pos, "expected \":\", got variable type")
+	}
+
 	var values []ast.Expr
 	// always permit optional initialization for more tolerant parsing
 	if p.tok == token.ASSIGN {
